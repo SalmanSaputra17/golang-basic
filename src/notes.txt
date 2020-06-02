@@ -1,0 +1,6 @@
+Yang perlu dipelajari lagi
+
+1. slice
+2. function as parameter
+3. recursive
+4. buffered channel
