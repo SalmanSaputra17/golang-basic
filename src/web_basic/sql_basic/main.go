@@ -1,20 +1,20 @@
 package main
 
 // import package yang dibutuhkan
-import(
-	"fmt"
+import (
 	"database/sql"
+	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
 // siapkan struct penampung response
 type student struct {
-	id string
-	name string
-	age int
+	id    string
+	name  string
+	age   int
 	grade int
 }
-
 
 // fungsi untuk konek ke database mysql
 func connect() (*sql.DB, error) {
@@ -51,7 +51,7 @@ func sqlQuery() {
 
 	for rows.Next() {
 		var each = student{}
-		var err = rows.Scan(&each.id, &each.name, &each.grade, &each.grade)
+		var err = rows.Scan(&each.id, &each.name, &each.age, &each.grade)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -108,57 +108,57 @@ func sqlPrepare() {
 
 	stmt, err := db.Prepare("SELECT name, grade FROM students WHERE id = ?")
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-    var result1 = student{}
-    stmt.QueryRow("E001").Scan(&result1.name, &result1.grade)
-    fmt.Printf("name: %s\ngrade: %d\n", result1.name, result1.grade)
+	var result1 = student{}
+	stmt.QueryRow("E001").Scan(&result1.name, &result1.grade)
+	fmt.Printf("name: %s\ngrade: %d\n", result1.name, result1.grade)
 
-    var result2 = student{}
-    stmt.QueryRow("W001").Scan(&result2.name, &result2.grade)
-    fmt.Printf("name: %s\ngrade: %d\n", result2.name, result2.grade)
+	var result2 = student{}
+	stmt.QueryRow("W001").Scan(&result2.name, &result2.grade)
+	fmt.Printf("name: %s\ngrade: %d\n", result2.name, result2.grade)
 }
 
 // insert, update dan delete dengan menggunakan perintah Exec
 func sqlExec() {
-    db, err := connect()
+	db, err := connect()
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-    defer db.Close()
+	defer db.Close()
 
-    _, err = db.Exec("INSERT INTO students VALUES (?, ?, ?, ?)", "G001", "Galahad", 29, 2)
+	_, err = db.Exec("INSERT INTO students VALUES (?, ?, ?, ?)", "G001", "Galahad", 29, 2)
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-    fmt.Println("insert success!")
+	fmt.Println("insert success!")
 
-    _, err = db.Exec("UPDATE students SET age = ? WHERE id = ?", 28, "W001")
+	_, err = db.Exec("UPDATE students SET age = ? WHERE id = ?", 28, "W001")
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-    fmt.Println("update success!")
+	fmt.Println("update success!")
 
-    _, err = db.Exec("DELETE FROM students WHERE id = ?", "E001")
+	_, err = db.Exec("DELETE FROM students WHERE id = ?", "E001")
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-    fmt.Println("delete success!")
+	fmt.Println("delete success!")
 }
 
 func main() {
